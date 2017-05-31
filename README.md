@@ -27,6 +27,6 @@ Another testing site with Django
 - pip 9.0.1 (from /Library/Python/2.7/site-packages)
 
 
-## Logs
+## Log
 
 See <a href="log.txt">log.txt</a>
