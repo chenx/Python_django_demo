@@ -25,7 +25,7 @@ Another testing site with Django
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial01/
 
-## show django version
+\# show django version
 $ python -m django --version
 
 # create a project
