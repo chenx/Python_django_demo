@@ -91,159 +91,159 @@ ERROR 1049 (42000): Unknown database 'django_0001'
 \# https://stackoverflow.com/questions/12106727/mysql-copying-tables-files-gives-rise-to-error-1017-hy000-cant-find-file  
 \# 1. check permission: MySQL data directory and all files in it are owned by mysql user/group  
 \# chown -R mysql:mysql your-mysql-data-dir-here  
-\# 2. repair corrupted tables
-\# Use mysqlcheck to check for corrupted tables and repair them if it finds any:
-\# mysqlcheck -u root -p --auto-repair --all-databases
-\# If you still can't use the tables after that then give mysqldump a go!
+\# 2. repair corrupted tables  
+\# Use mysqlcheck to check for corrupted tables and repair them if it finds any:  
+\# mysqlcheck -u root -p --auto-repair --all-databases  
+\# If you still can't use the tables after that then give mysqldump a go!  
 
-$ which mysql
-/usr/local/mysql/bin/mysql
-$ ls -l /usr/local/
-$ sudo chown -R mysql:mysql /usr/local/mysql
-$ sudo chown -R mysql:mysql /usr/local/mysql-5.5.18-osx10.6-x86_64/
+$ which mysql  
+/usr/local/mysql/bin/mysql  
+$ ls -l /usr/local/  
+$ sudo chown -R mysql:mysql /usr/local/mysql  
+$ sudo chown -R mysql:mysql /usr/local/mysql-5.5.18-osx10.6-x86_64/  
 
-mysql> source makedb.sql;
-Database changed
-Query OK, 0 rows affected (0.03 sec)
+mysql> source makedb.sql;  
+Database changed  
+Query OK, 0 rows affected (0.03 sec)  
 
-Query OK, 0 rows affected (0.00 sec)
+Query OK, 0 rows affected (0.00 sec)  
 
-Query OK, 0 rows affected, 1 warning (0.00 sec)
+Query OK, 0 rows affected, 1 warning (0.00 sec)  
 
-\# this now works.
+\# this now works.  
 $ mysql -u django_usr1 -p
 
 
   - now create database
 
-$ python manage.py migrate
-...
-'Did you install mysqlclient or MySQL-python?' % e
-django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module: dlopen(/Library/Python/2.7/site-packages/_mysql.so, 2): Library not loaded: libmysqlclient.18.dylib
-  Referenced from: /Library/Python/2.7/site-packages/_mysql.so
-  Reason: unsafe use of relative rpath libmysqlclient.18.dylib in /Library/Python/2.7/site-packages/_mysql.so with restricted binary.
-Did you install mysqlclient or MySQL-python?
+$ python manage.py migrate  
+...  
+'Did you install mysqlclient or MySQL-python?' % e  
+django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module: dlopen(/Library/Python/2.7/site-packages/_mysql.so, 2): Library not loaded: libmysqlclient.18.dylib  
+  Referenced from: /Library/Python/2.7/site-packages/_mysql.so  
+  Reason: unsafe use of relative rpath libmysqlclient.18.dylib in /Library/Python/2.7/site-packages/_mysql.so with restricted binary.  
+Did you install mysqlclient or MySQL-python?  
 
-\# found solution:
-\# https://stackoverflow.com/questions/31343299/mysql-improperly-configured-reason-unsafe-use-of-relative-path
-\# Assuming that libmysqlclient.18.dylib is in /usr/local/mysql/lib/, then run the command:
-$ sudo install_name_tool -change libmysqlclient.18.dylib \
-  /usr/local/mysql/lib/libmysqlclient.18.dylib \
-  /Library/Python/2.7/site-packages/_mysql.so
+\# found solution:  
+\# https://stackoverflow.com/questions/31343299/mysql-improperly-configured-reason-unsafe-use-of-relative-path  
+\# Assuming that libmysqlclient.18.dylib is in /usr/local/mysql/lib/, then run the command:  
+$ sudo install_name_tool -change libmysqlclient.18.dylib \  
+  /usr/local/mysql/lib/libmysqlclient.18.dylib \  
+  /Library/Python/2.7/site-packages/_mysql.so  
 
 
-$ python manage.py check
-System check identified no issues (0 silenced).
-$ python manage.py migrate
-System check identified some issues:
+$ python manage.py check  
+System check identified no issues (0 silenced).  
+$ python manage.py migrate  
+System check identified some issues:  
 
-WARNINGS:
-?: (mysql.W002) MySQL Strict Mode is not set for database connection 'default'
-	HINT: MySQL's Strict Mode fixes many data integrity problems in MySQL, such as data truncation upon insertion, by escalating warnings into errors. It is strongly recommended you activate it. See: https://docs.djangoproject.com/en/1.11/ref/databases/#mysql-sql-mode
-Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, sessions
-Running migrations:
-  Applying contenttypes.0001_initial... OK
-  Applying auth.0001_initial... OK
-  Applying admin.0001_initial... OK
-  Applying admin.0002_logentry_remove_auto_add... OK
-  Applying contenttypes.0002_remove_content_type_name... OK
-  Applying auth.0002_alter_permission_name_max_length... OK
-  Applying auth.0003_alter_user_email_max_length... OK
-  Applying auth.0004_alter_user_username_opts... OK
-  Applying auth.0005_alter_user_last_login_null... OK
-  Applying auth.0006_require_contenttypes_0002... OK
-  Applying auth.0007_alter_validators_add_error_messages... OK
-  Applying auth.0008_alter_user_username_max_length... OK
-  Applying sessions.0001_initial... OK
+WARNINGS:  
+?: (mysql.W002) MySQL Strict Mode is not set for database connection 'default'  
+	HINT: MySQL's Strict Mode fixes many data integrity problems in MySQL, such as data truncation upon insertion, by   escalating warnings into errors. It is strongly recommended you activate it. See: https://docs.djangoproject.com/en/1.11/ref/databases/#mysql-sql-mode  
+Operations to perform:  
+  Apply all migrations: admin, auth, contenttypes, sessions  
+Running migrations:  
+  Applying contenttypes.0001_initial... OK  
+  Applying auth.0001_initial... OK  
+  Applying admin.0001_initial... OK  
+  Applying admin.0002_logentry_remove_auto_add... OK  
+  Applying contenttypes.0002_remove_content_type_name... OK  
+  Applying auth.0002_alter_permission_name_max_length... OK  
+  Applying auth.0003_alter_user_email_max_length... OK  
+  Applying auth.0004_alter_user_username_opts... OK  
+  Applying auth.0005_alter_user_last_login_null... OK  
+  Applying auth.0006_require_contenttypes_0002... OK  
+  Applying auth.0007_alter_validators_add_error_messages... OK  
+  Applying auth.0008_alter_user_username_max_length... OK  
+  Applying sessions.0001_initial... OK  
 
-\# Note: to fix the issue of MySQL Strict Mode, add this to mysite/settings.py:
-\# (See: https://stackoverflow.com/questions/23022858/force-strict-sql-mode-in-django)
-\# DATABASES = {
-\#     'default': {
-\#         'ENGINE': 'django.db.backends.mysql',
-\#         'OPTIONS': {
-\#             'sql_mode': 'traditional',
-\#         }
-\#     }
-\# }
-\#
-\# This might work too:
-\# 'OPTIONS': {
-\#         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-\#  },
-\#
+\# Note: to fix the issue of MySQL Strict Mode, add this to mysite/settings.py:  
+\# (See: https://stackoverflow.com/questions/23022858/force-strict-sql-mode-in-django)  
+\# DATABASES = {  
+\#     'default': {  
+\#         'ENGINE': 'django.db.backends.mysql',  
+\#         'OPTIONS': {  
+\#             'sql_mode': 'traditional',  
+\#         }  
+\#     }  
+\# }  
+\#  
+\# This might work too:  
+\# 'OPTIONS': {  
+\#         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",  
+\#  },  
+\#  
 
 
   Now these tables show in mysql:
 
-mysql> show tables;
-+----------------------------+
-| Tables_in_django_0001      |
-+----------------------------+
-| auth_group                 |
-| auth_group_permissions     |
-| auth_permission            |
-| auth_user                  |
-| auth_user_groups           |
-| auth_user_user_permissions |
-| django_admin_log           |
-| django_content_type        |
-| django_migrations          |
-| django_session             |
-+----------------------------+
-10 rows in set (0.00 sec)
+mysql> show tables;  
++----------------------------+  
+| Tables_in_django_0001      |  
++----------------------------+  
+| auth_group                 |  
+| auth_group_permissions     |  
+| auth_permission            |   
+| auth_user                  |  
+| auth_user_groups           |  
+| auth_user_user_permissions |  
+| django_admin_log           |  
+| django_content_type        |  
+| django_migrations          |  
+| django_session             |  
++----------------------------+  
+10 rows in set (0.00 sec)  
 
 
   Next create models for the polls app:
 
-\# polls/models.py
-from django.db import models
+\# polls/models.py  
+from django.db import models  
 
 
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+class Question(models.Model):  
+    question_text = models.CharField(max_length=200)  
+    pub_date = models.DateTimeField('date published')  
 
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+class Choice(models.Model):  
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)  
+    choice_text = models.CharField(max_length=200)  
+    votes = models.IntegerField(default=0)  
 
-\# this allowsdjango to 
-\# 1) create a db schema,
-\# 2) create a python db-access API for Question and Choice objects
+\# this allowsdjango to   
+\# 1) create a db schema,  
+\# 2) create a python db-access API for Question and Choice objects  
 
-\# mysite/settings.py
-INSTALLED_APPS = [
-...
-  'polls.apps.PollsConfig',  # in polls/apps.py
-]
+\# mysite/settings.py  
+INSTALLED_APPS = [  
+...  
+  'polls.apps.PollsConfig',  # in polls/apps.py  
+]  
 
-$ python manage.py makemigrations polls
-Migrations for 'polls':
-  polls/migrations/0001_initial.py
-    - Create model Choice
-    - Create model Question
-    - Add field question to choice
+$ python manage.py makemigrations polls  
+Migrations for 'polls':  
+  polls/migrations/0001_initial.py  
+    - Create model Choice  
+    - Create model Question  
+    - Add field question to choice  
 
-\# now migraton changes are stored in polls/migrations/0001_initial.py
-\# sqlmigrate command will show the SQL:
-$ python manage.py sqlmigrate polls 0001
+\# now migraton changes are stored in polls/migrations/0001_initial.py  
+\# sqlmigrate command will show the SQL:  
+$ python manage.py sqlmigrate polls 0001  
 
-\# now apply the changes to db, without losing old data:
-$ python manage.py migrate
-Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, polls, sessions
-Running migrations:
-  Applying polls.0001_initial... OK
+\# now apply the changes to db, without losing old data:  
+$ python manage.py migrate  
+Operations to perform:  
+  Apply all migrations: admin, auth, contenttypes, polls, sessions  
+Running migrations:  
+  Applying polls.0001_initial... OK  
 
 
-  The 3-step guide to make model changes:
-  1) change modles (in polls/models.py)
-  2) run python manage.py makemigrations to create migrations for the changes
-  3) run python manage.py migrate to apply changes to the database
+  The 3-step guide to make model changes:  
+  1) change modles (in polls/models.py)  
+  2) run python manage.py makemigrations to create migrations for the changes  
+  3) run python manage.py migrate to apply changes to the database  
 
   - Now try django shell:
 
@@ -252,52 +252,52 @@ python manage.py shell
 
   - Now create admin user for the Django Admin.
 
-$ python manage.py createsuperuser
-Username (leave blank to use 'chenx'): admin
-Email address: ...@gmail.com
-Password: xxxxxxxx
-Password (again): xxxxxxxx
+$ python manage.py createsuperuser  
+Username (leave blank to use 'chenx'): admin  
+Email address: ...@gmail.com  
+Password: xxxxxxxx  
+Password (again): xxxxxxxx 
 
-\# make the poll app modifiable in the admin
-\# polls/admin.py
+\# make the poll app modifiable in the admin  
+\# polls/admin.py  
 rom django.contrib import admin
 
-from .models import Question
-from .models import Choice
+from .models import Question  
+from .models import Choice  
 
-admin.site.register(Question)
-admin.site.register(Choice)
+admin.site.register(Question)  
+admin.site.register(Choice)  
 
-\# Now restart apache server
-\# will be able to modify Question and Choice from admin UI.
+\# Now restart apache server 
+\# will be able to modify Question and Choice from admin UI.  
 
 
   - Now add a homepage to the entire site.
 
-\# create mysite/views.py:
-\# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+\# create mysite/views.py:  
+\# -*- coding: utf-8 -*-  
+from __future__ import unicode_literals  
 
-from django.shortcuts import render
+from django.shortcuts import render  
 
-\# Create your views here.
-from django.http import HttpResponse
+\# Create your views here.  
+from django.http import HttpResponse  
 
-def index(request):
-  return HttpResponse(
-    """Hello, world. You're at the python2 homepage.
-    <a href="admin/">Admin</a>
-    <a href="polls/">Polls</a>
-    """)
+def index(request):  
+  return HttpResponse(  
+    """Hello, world. You're at the python2 homepage.  
+    <a href="admin/">Admin</a>  
+    <a href="polls/">Polls</a>  
+    """)  
 
-\# edit mysite/urls.py
-...
-from . import views
+\# edit mysite/urls.py  
+...  
+from . import views  
 
-urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    ...
-]
+urlpatterns = [  
+    url(r'^$', views.index, name='index'),  
+    ...  
+]  
 
 \# restart apache. Now have a site homepage.
 
@@ -305,71 +305,71 @@ urlpatterns = [
 
 05/19/2017
 
-- Install mod_wsgi 4.5.15
-  - download from https://pypi.python.org/pypi/mod_wsgi
-  - install instruction: 
-    https://modwsgi.readthedocs.io/en/develop/user-guides/installation-on-macosx.html
+- Install mod_wsgi 4.5.15  
+  - download from https://pypi.python.org/pypi/mod_wsgi   
+  - install instruction:   
+    https://modwsgi.readthedocs.io/en/develop/user-guides/installation-on-macosx.html  
 
-$ ./configure
-checking for apxs2... no
-checking for apxs... /usr/sbin/apxs
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-cat: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/libtool: No such file or directory
-checking for gcc... gcc
-checking whether the C compiler works... yes
-checking for C compiler default output file name... a.out
-checking for suffix of executables... 
-checking whether we are cross compiling... no
-checking for suffix of object files... o
-checking whether we are using the GNU C compiler... yes
-checking whether gcc accepts -g... yes
-checking for gcc option to accept ISO C89... none needed
-checking for prctl... no
-checking Apache version... apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-2.4.25
-checking for python... /usr/bin/python
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-configure: creating ./config.status
-config.status: creating Makefile
+$ ./configure  
+checking for apxs2... no  
+checking for apxs... /usr/sbin/apxs  
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not   found!.  
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not   found!.  
+cat: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/libtool: No   such file or directory  
+checking for gcc... gcc  
+checking whether the C compiler works... yes  
+checking for C compiler default output file name... a.out  
+checking for suffix of executables...   
+checking whether we are cross compiling... no  
+checking for suffix of object files... o  
+checking whether we are using the GNU C compiler... yes  
+checking whether gcc accepts -g... yes  
+checking for gcc option to accept ISO C89... none needed  
+checking for prctl... no  
+checking Apache version... apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.  
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.  
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.  
+2.4.25  
+checking for python... /usr/bin/python  
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.  
+configure: creating ./config.status  
+config.status: creating Makefile  
 
 
-\# See https://github.com/Homebrew/homebrew-php/issues/3594 for fix below:
-$ xcode-select --install
-$ sudo chown -R chenx /usr/local
-$ brew update
-To restore the stashed changes to /usr/local run:
-  'cd /usr/local && git stash pop'
-Updated Homebrew from 1244aa6ec to e1098b0e6.
-$ xcode-select --install
-$ sudo chown -R chenx /usr/local
-$ brew update
-To restore the stashed changes to /usr/local run:
-  'cd /usr/local && git stash pop'
-Updated Homebrew from 1244aa6ec to e1098b0e6.
-$$ xcode-select --install
-$ sudo chown -R chenx /usr/local
-$ brew update
-To restore the stashed changes to /usr/local run:
-  'cd /usr/local && git stash pop'
-Updated Homebrew from 1244aa6ec to e1098b0e6.
-...
-==> Migrating HOMEBREW_REPOSITORY (please wait)...
-==> Migrated HOMEBREW_REPOSITORY to /usr/local/Homebrew!
-Homebrew no longer needs to have ownership of /usr/local. If you wish you can
-return /usr/local to its default ownership with:
-  sudo chown root:wheel /usr/local
-$ sudo chown root:wheel /usr/local
-$ brew install apr-util
-$ brew link apr-util --force
-$ brew link apr --force
-$ which apu-1-config
-/usr/local/bin/apu-1-config
-$ sudo mkdir -p /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/
-$ sudo ln -s /usr/local/bin/apu-1-config /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/
-$ sudo ln -s /usr/local/bin/apr-1-config /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/
+\# See https://github.com/Homebrew/homebrew-php/issues/3594 for fix below:  
+$ xcode-select --install  
+$ sudo chown -R chenx /usr/local  
+$ brew update  
+To restore the stashed changes to /usr/local run:  
+  'cd /usr/local && git stash pop'  
+Updated Homebrew from 1244aa6ec to e1098b0e6.  
+$ xcode-select --install  
+$ sudo chown -R chenx /usr/local  
+$ brew update  
+To restore the stashed changes to /usr/local run:  
+  'cd /usr/local && git stash pop'  
+Updated Homebrew from 1244aa6ec to e1098b0e6.  
+$$ xcode-select --install  
+$ sudo chown -R chenx /usr/local  
+$ brew update  
+To restore the stashed changes to /usr/local run:  
+  'cd /usr/local && git stash pop'  
+Updated Homebrew from 1244aa6ec to e1098b0e6.  
+...  
+==> Migrating HOMEBREW_REPOSITORY (please wait)...  
+==> Migrated HOMEBREW_REPOSITORY to /usr/local/Homebrew!  
+Homebrew no longer needs to have ownership of /usr/local. If you wish you can  
+return /usr/local to its default ownership with:  
+  sudo chown root:wheel /usr/local  
+$ sudo chown root:wheel /usr/local  
+$ brew install apr-util  
+$ brew link apr-util --force  
+$ brew link apr --force  
+$ which apu-1-config  
+/usr/local/bin/apu-1-config  
+$ sudo mkdir -p /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/  
+$ sudo ln -s /usr/local/bin/apu-1-config /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/  
+$ sudo ln -s /usr/local/bin/apr-1-config /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/  
 
 $ sudo mkdir -p /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/
 $ sudo ln -s /usr/bin/libtool /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/
