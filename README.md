@@ -12,7 +12,8 @@ Another testing site with Django
 
 ## Logs
 
-05/30/2017
+
+### 05/30/2017
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial03/
 - To get from a URL to a view, Django uses what are known as ‘URLconfs’.  
@@ -20,7 +21,7 @@ Another testing site with Django
 - https://stackoverflow.com/questions/19875789/django-gives-bad-request-400-when-debug-false
 
 
-05/24/2017
+### 05/24/2017
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial01/
 
@@ -30,37 +31,37 @@ $ python -m django --version
 \# create a project  
 $ django-admin startproject mysite
 
-\# start dev server: localhost:8000
+\# start dev server: localhost:8000  
 $ python manage.py runserver
 
-\# create the Polls app
+\# create the Polls app  
 $ python manage.py startapp polls
 
-\# create polls/views.py 
+\# create polls/views.py  
 from django.http import HttpResponse
 
-def index(request):
+def index(request):  
     return HttpResponse("Hello, world. You're at the polls index.")
 
-\# create polls/urls.py
+\# create polls/urls.py  
 from django.conf.urls import url
 
 from . import views
 
-urlpatterns = [
-    url(r'^$', views.index, name='index'),
+urlpatterns = [  
+    url(r'^$', views.index, name='index'),  
 ]
 
-\# edit mysite/urls.py
-from django.conf.urls import include, url
+\# edit mysite/urls.py  
+from django.conf.urls import include, url  
 from django.contrib import admin
 
-urlpatterns = [
-    url(r'^polls/', include('polls.urls')),
-    url(r'^admin/', admin.site.urls),
+urlpatterns = [  
+    url(r'^polls/', include('polls.urls')),  
+    url(r'^admin/', admin.site.urls),  
 ]
 
-\# run server to see: localhost:8000/polls
+\# run server to see: localhost:8000/polls  
 $ python manage.py runserver
 
 
@@ -74,22 +75,22 @@ $ python manage.py runserver
 
   - create mysql database
   
-$ cd /Library/WebServer/PythonRoot/python2
-$ cp /Library/WebServer/Documents/pibb/INSTALL/makedb.sql .
+$ cd /Library/WebServer/PythonRoot/python2  
+$ cp /Library/WebServer/Documents/pibb/INSTALL/makedb.sql .  
 \# edit makedb.sql, use 'django_0001' as db name, 'django_usr1' as user name.
 
-$ mysql -u root -p
-mysql> source makedb.sql;
-Database changed
-ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
-ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
-ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
-ERROR 1049 (42000): Unknown database 'django_0001'
+$ mysql -u root -p  
+mysql> source makedb.sql;  
+Database changed  
+ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)  
+ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)  
+ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)  
+ERROR 1049 (42000): Unknown database 'django_0001'  
 
-\# look for solution for this issue:
-\# https://stackoverflow.com/questions/12106727/mysql-copying-tables-files-gives-rise-to-error-1017-hy000-cant-find-file
-\# 1. check permission: MySQL data directory and all files in it are owned by mysql user/group
-\# chown -R mysql:mysql your-mysql-data-dir-here
+\# look for solution for this issue:  
+\# https://stackoverflow.com/questions/12106727/mysql-copying-tables-files-gives-rise-to-error-1017-hy000-cant-find-file  
+\# 1. check permission: MySQL data directory and all files in it are owned by mysql user/group  
+\# chown -R mysql:mysql your-mysql-data-dir-here  
 \# 2. repair corrupted tables
 \# Use mysqlcheck to check for corrupted tables and repair them if it finds any:
 \# mysqlcheck -u root -p --auto-repair --all-databases
