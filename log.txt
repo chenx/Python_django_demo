@@ -114,9 +114,11 @@ $ mysql -u django_usr1 -p
 $ python manage.py migrate
 ...
 'Did you install mysqlclient or MySQL-python?' % e
-django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module: dlopen(/Library/Python/2.7/site-packages/_mysql.so, 2): Library not loaded: libmysqlclient.18.dylib
+django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module: dlopen(/Library/Python/2.7/site-packages
+/_mysql.so, 2): Library not loaded: libmysqlclient.18.dylib
   Referenced from: /Library/Python/2.7/site-packages/_mysql.so
-  Reason: unsafe use of relative rpath libmysqlclient.18.dylib in /Library/Python/2.7/site-packages/_mysql.so with restricted binary.
+  Reason: unsafe use of relative rpath libmysqlclient.18.dylib in /Library/Python/2.7/site-packages/_mysql.so with
+  restricted binary.
 Did you install mysqlclient or MySQL-python?
 
 # found solution:
@@ -134,7 +136,9 @@ System check identified some issues:
 
 WARNINGS:
 ?: (mysql.W002) MySQL Strict Mode is not set for database connection 'default'
-	HINT: MySQL's Strict Mode fixes many data integrity problems in MySQL, such as data truncation upon insertion, by escalating warnings into errors. It is strongly recommended you activate it. See: https://docs.djangoproject.com/en/1.11/ref/databases/#mysql-sql-mode
+	HINT: MySQL's Strict Mode fixes many data integrity problems in MySQL, such as data truncation upon insertion, by 
+	escalating warnings into errors. It is strongly recommended you activate it. See: https://docs.djangoproject.com
+	/en/1.11/ref/databases/#mysql-sql-mode
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions
 Running migrations:
@@ -310,7 +314,8 @@ checking for apxs2... no
 checking for apxs... /usr/sbin/apxs
 apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
 apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-cat: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/libtool: No such file or directory
+cat: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/libtool: No 
+such file or directory
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
@@ -321,12 +326,16 @@ checking whether we are using the GNU C compiler... yes
 checking whether gcc accepts -g... yes
 checking for gcc option to accept ISO C89... none needed
 checking for prctl... no
-checking Apache version... apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+checking Apache version... apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local
+/bin/apr-1-config not found!.
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not 
+found!.
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not 
+found!.
 2.4.25
 checking for python... /usr/bin/python
-apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not 
+found!.
 configure: creating ./config.status
 config.status: creating Makefile
 
@@ -367,7 +376,8 @@ $ sudo ln -s /usr/local/bin/apu-1-config /Applications/Xcode.app/Contents/Develo
 $ sudo ln -s /usr/local/bin/apr-1-config /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/
 
 $ sudo mkdir -p /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/
-$ sudo ln -s /usr/bin/libtool /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/
+$ sudo ln -s /usr/bin/libtool /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share
+/apr-1/build-1/
 
 $ ./configure
 checking for apxs2... no
@@ -423,7 +433,8 @@ WSGIPythonHome "/System/Library/Frameworks/Python.framework/Versions/2.7"
 $ sudo apachectl restart
 
 # in /var/log/apache2/error_log, can see this:
-[Fri May 19 23:35:30.238174 2017] [mpm_prefork:notice] [pid 15315] AH00163: Apache/2.4.25 (Unix) PHP/5.6.30 mod_wsgi/4.5.15 Python/2.7 configured -- resuming normal operations
+[Fri May 19 23:35:30.238174 2017] [mpm_prefork:notice] [pid 15315] AH00163: Apache/2.4.25 (Unix) PHP/5.6.30 mod_wsgi/4.5.15 
+Python/2.7 configured -- resuming normal operations
 
 # this shows the mod_wsgi is properly loaded.
 
