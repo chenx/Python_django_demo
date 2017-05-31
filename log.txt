@@ -1,10 +1,11 @@
 
 Django
 
-    djangoproject.com/
-    django doc, table of contents
-    Local Django testing site: localhost/python2/
-    Restart apache: sudo apachectl restart 
+ -  djangoproject.com/
+ -  django doc, table of contents
+ -  Local Django testing site: localhost/python2/
+ -  Restart apache: sudo apachectl restart 
+
 
 05/30/2017
 
