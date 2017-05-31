@@ -17,7 +17,9 @@ Another testing site with Django
   - sudo pip install Django==1.11.1 
   - Installed to: /Library/Python/2.7/site-packages/django
 - mod_wsgi 4.5.15 
-  - mod_wsgi-4.5.15.tar.gz from http://modwsgi.readthedocs.io/en/develop/
+  - sudo pip install mod_wsgi
+  - https://github.com/GrahamDumpleton/mod_wsgi#connecting-into-apache-installation
+  - also see: http://modwsgi.readthedocs.io/en/develop/
 - apache2 2.4 (/etc/apache2/httpd.conf)
 - mysql  Ver 14.14 Distrib 5.5.18, for osx10.6 (i386) using readline 5.1
 - mysqlclient 1.3.10 
