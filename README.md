@@ -4,8 +4,8 @@ Another testing site with Django
 
 ## Links
 
-- djangoproject.com/
-- django doc, table of contents
+- <a href="http://djangoproject.com">djangoproject.com</a>
+- <a href="https://docs.djangoproject.com/en/1.11/">django doc</a>, <a href="https://docs.djangoproject.com/en/1.11/contents/">table of contents</a>
 - Local Django testing site: localhost/python2/
 - Restart apache: sudo apachectl restart 
 
