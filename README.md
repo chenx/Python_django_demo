@@ -10,6 +10,15 @@ Another testing site with Django
 - Restart apache: sudo apachectl restart 
 
 
+## Environment
+
+- Python 2.7.10
+- django 1.11.1
+- apache2 2.4
+- mysql  Ver 14.14 Distrib 5.5.18, for osx10.6 (i386) using readline 5.1
+- mod_wsgi 4.5.15 (mod_wsgi-4.5.15.tar.gz)
+
+
 ## Logs
 
 See <a href="log.txt">log.txt</a>
