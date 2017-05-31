@@ -15,7 +15,7 @@ Another testing site with Django
 05/30/2017
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial03/
-- To get from a URL to a view, Django uses what are known as ‘URLconfs’. 
+- To get from a URL to a view, Django uses what are known as ‘URLconfs’.  
   A URLconf maps URL patterns to views.
 - https://stackoverflow.com/questions/19875789/django-gives-bad-request-400-when-debug-false
 
@@ -24,10 +24,10 @@ Another testing site with Django
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial01/
 
-\# show django version
+\# show django version  
 $ python -m django --version
 
-\# create a project
+\# create a project  
 $ django-admin startproject mysite
 
 \# start dev server: localhost:8000
