@@ -12,6 +12,7 @@ Another testing site with Django, following tutorial at <a href="https://docs.dj
 
 ## Environment
 
+- macOS Sierra (Version 10.12.4)
 - Python 2.7.10
 - django 1.11.1 
   - sudo pip install Django==1.11.1 
