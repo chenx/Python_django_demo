@@ -10,6 +10,8 @@ Another testing site with Django
 - Restart apache: sudo apachectl restart 
 
 
+## Logs
+
 05/30/2017
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial03/
@@ -23,7 +25,7 @@ Another testing site with Django
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial01/
 
-# show django version
+## show django version
 $ python -m django --version
 
 # create a project
