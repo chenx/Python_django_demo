@@ -15,7 +15,6 @@ Another testing site with Django
 05/30/2017
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial03/
-
 - To get from a URL to a view, Django uses what are known as ‘URLconfs’. 
   A URLconf maps URL patterns to views.
 - https://stackoverflow.com/questions/19875789/django-gives-bad-request-400-when-debug-false
@@ -28,22 +27,22 @@ Another testing site with Django
 \# show django version
 $ python -m django --version
 
-# create a project
+\# create a project
 $ django-admin startproject mysite
 
-# start dev server: localhost:8000
+\# start dev server: localhost:8000
 $ python manage.py runserver
 
-# create the Polls app
+\# create the Polls app
 $ python manage.py startapp polls
 
-# create polls/views.py 
+\# create polls/views.py 
 from django.http import HttpResponse
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
-# create polls/urls.py
+\# create polls/urls.py
 from django.conf.urls import url
 
 from . import views
@@ -52,7 +51,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
 ]
 
-# edit mysite/urls.py
+\# edit mysite/urls.py
 from django.conf.urls import include, url
 from django.contrib import admin
 
@@ -61,7 +60,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 ]
 
-# run server to see: localhost:8000/polls
+\# run server to see: localhost:8000/polls
 $ python manage.py runserver
 
 
@@ -77,7 +76,7 @@ $ python manage.py runserver
   
 $ cd /Library/WebServer/PythonRoot/python2
 $ cp /Library/WebServer/Documents/pibb/INSTALL/makedb.sql .
-# edit makedb.sql, use 'django_0001' as db name, 'django_usr1' as user name.
+\# edit makedb.sql, use 'django_0001' as db name, 'django_usr1' as user name.
 
 $ mysql -u root -p
 mysql> source makedb.sql;
@@ -87,14 +86,14 @@ ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
 ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
 ERROR 1049 (42000): Unknown database 'django_0001'
 
-# look for solution for this issue:
-# https://stackoverflow.com/questions/12106727/mysql-copying-tables-files-gives-rise-to-error-1017-hy000-cant-find-file
-# 1. check permission: MySQL data directory and all files in it are owned by mysql user/group
-# chown -R mysql:mysql your-mysql-data-dir-here
-# 2. repair corrupted tables
-# Use mysqlcheck to check for corrupted tables and repair them if it finds any:
-# mysqlcheck -u root -p --auto-repair --all-databases
-# If you still can't use the tables after that then give mysqldump a go!
+\# look for solution for this issue:
+\# https://stackoverflow.com/questions/12106727/mysql-copying-tables-files-gives-rise-to-error-1017-hy000-cant-find-file
+\# 1. check permission: MySQL data directory and all files in it are owned by mysql user/group
+\# chown -R mysql:mysql your-mysql-data-dir-here
+\# 2. repair corrupted tables
+\# Use mysqlcheck to check for corrupted tables and repair them if it finds any:
+\# mysqlcheck -u root -p --auto-repair --all-databases
+\# If you still can't use the tables after that then give mysqldump a go!
 
 $ which mysql
 /usr/local/mysql/bin/mysql
@@ -110,7 +109,7 @@ Query OK, 0 rows affected (0.00 sec)
 
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 
-# this now works.
+\# this now works.
 $ mysql -u django_usr1 -p
 
 
@@ -124,9 +123,9 @@ django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module: dlope
   Reason: unsafe use of relative rpath libmysqlclient.18.dylib in /Library/Python/2.7/site-packages/_mysql.so with restricted binary.
 Did you install mysqlclient or MySQL-python?
 
-# found solution:
-# https://stackoverflow.com/questions/31343299/mysql-improperly-configured-reason-unsafe-use-of-relative-path
-# Assuming that libmysqlclient.18.dylib is in /usr/local/mysql/lib/, then run the command:
+\# found solution:
+\# https://stackoverflow.com/questions/31343299/mysql-improperly-configured-reason-unsafe-use-of-relative-path
+\# Assuming that libmysqlclient.18.dylib is in /usr/local/mysql/lib/, then run the command:
 $ sudo install_name_tool -change libmysqlclient.18.dylib \
   /usr/local/mysql/lib/libmysqlclient.18.dylib \
   /Library/Python/2.7/site-packages/_mysql.so
@@ -157,22 +156,22 @@ Running migrations:
   Applying auth.0008_alter_user_username_max_length... OK
   Applying sessions.0001_initial... OK
 
-# Note: to fix the issue of MySQL Strict Mode, add this to mysite/settings.py:
-# (See: https://stackoverflow.com/questions/23022858/force-strict-sql-mode-in-django)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'OPTIONS': {
-#             'sql_mode': 'traditional',
-#         }
-#     }
-# }
-#
-# This might work too:
-# 'OPTIONS': {
-#         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#  },
-#
+\# Note: to fix the issue of MySQL Strict Mode, add this to mysite/settings.py:
+\# (See: https://stackoverflow.com/questions/23022858/force-strict-sql-mode-in-django)
+\# DATABASES = {
+\#     'default': {
+\#         'ENGINE': 'django.db.backends.mysql',
+\#         'OPTIONS': {
+\#             'sql_mode': 'traditional',
+\#         }
+\#     }
+\# }
+\#
+\# This might work too:
+\# 'OPTIONS': {
+\#         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+\#  },
+\#
 
 
   Now these tables show in mysql:
@@ -197,7 +196,7 @@ mysql> show tables;
 
   Next create models for the polls app:
 
-# polls/models.py
+\# polls/models.py
 from django.db import models
 
 
@@ -211,11 +210,11 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
-# this allowsdjango to 
-# 1) create a db schema,
-# 2) create a python db-access API for Question and Choice objects
+\# this allowsdjango to 
+\# 1) create a db schema,
+\# 2) create a python db-access API for Question and Choice objects
 
-# mysite/settings.py
+\# mysite/settings.py
 INSTALLED_APPS = [
 ...
   'polls.apps.PollsConfig',  # in polls/apps.py
@@ -228,11 +227,11 @@ Migrations for 'polls':
     - Create model Question
     - Add field question to choice
 
-# now migraton changes are stored in polls/migrations/0001_initial.py
-# sqlmigrate command will show the SQL:
+\# now migraton changes are stored in polls/migrations/0001_initial.py
+\# sqlmigrate command will show the SQL:
 $ python manage.py sqlmigrate polls 0001
 
-# now apply the changes to db, without losing old data:
+\# now apply the changes to db, without losing old data:
 $ python manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, polls, sessions
@@ -254,12 +253,12 @@ python manage.py shell
 
 $ python manage.py createsuperuser
 Username (leave blank to use 'chenx'): admin
-Email address: txchen@gmail.com
-Password: pwd1pwd!
-Password (again): pwd1pwd!
+Email address: ...@gmail.com
+Password: xxxxxxxx
+Password (again): xxxxxxxx
 
-# make the poll app modifiable in the admin
-# polls/admin.py
+\# make the poll app modifiable in the admin
+\# polls/admin.py
 rom django.contrib import admin
 
 from .models import Question
@@ -268,19 +267,19 @@ from .models import Choice
 admin.site.register(Question)
 admin.site.register(Choice)
 
-# Now restart apache server
-# will be able to modify Question and Choice from admin UI.
+\# Now restart apache server
+\# will be able to modify Question and Choice from admin UI.
 
 
   - Now add a homepage to the entire site.
 
-# create mysite/views.py:
-# -*- coding: utf-8 -*-
+\# create mysite/views.py:
+\# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.shortcuts import render
 
-# Create your views here.
+\# Create your views here.
 from django.http import HttpResponse
 
 def index(request):
@@ -290,7 +289,7 @@ def index(request):
     <a href="polls/">Polls</a>
     """)
 
-# edit mysite/urls.py
+\# edit mysite/urls.py
 ...
 from . import views
 
@@ -299,7 +298,7 @@ urlpatterns = [
     ...
 ]
 
-# restart apache. Now have a site homepage.
+\# restart apache. Now have a site homepage.
 
 
 
@@ -336,7 +335,7 @@ configure: creating ./config.status
 config.status: creating Makefile
 
 
-# See https://github.com/Homebrew/homebrew-php/issues/3594 for fix below:
+\# See https://github.com/Homebrew/homebrew-php/issues/3594 for fix below:
 $ xcode-select --install
 $ sudo chown -R chenx /usr/local
 $ brew update
@@ -396,12 +395,12 @@ $ make
 ...
 apxs:Error: Command failed with rc=65536
 
-# search internet shows needs to reinstall python.
-# don't want the trouble. 
+\# search internet shows needs to reinstall python.
+\# don't want the trouble. 
 
 
-# So use pip by following https://github.com/GrahamDumpleton/mod_wsgi
-# Note "pip list" shows all packages installed by pip.
+\# So use pip by following https://github.com/GrahamDumpleton/mod_wsgi
+\# Note "pip list" shows all packages installed by pip.
 
 $ sudo pip install mod_wsgi
 Collecting mod_wsgi
@@ -411,26 +410,26 @@ Installing collected packages: mod-wsgi
   Running setup.py install for mod-wsgi ... done
 Successfully installed mod-wsgi-4.5.15
 
-# target folder: 
-# /Library/Python/2.7/site-packages/mod_wsgi/mod_wsgi-py27.so
+\# target folder: 
+\# /Library/Python/2.7/site-packages/mod_wsgi/mod_wsgi-py27.so
 
-# note now "mod_wsgi-express start-server" will not work. It times out.
-# follow https://github.com/GrahamDumpleton/mod_wsgi#connecting-into-apache-installation
-# to connect this into Apache installation:
+\# note now "mod_wsgi-express start-server" will not work. It times out.
+\# follow https://github.com/GrahamDumpleton/mod_wsgi#connecting-into-apache-installation
+\# to connect this into Apache installation:
 
 $ mod_wsgi-express module-config
 LoadModule wsgi_module "/Library/Python/2.7/site-packages/mod_wsgi/server/mod_wsgi-py27.so"
 WSGIPythonHome "/System/Library/Frameworks/Python.framework/Versions/2.7"
 
-# copy this into /etc/apache2/httpd.conf
+\# copy this into /etc/apache2/httpd.conf
 
-# restart apache
+\# restart apache
 $ sudo apachectl restart
 
-# in /var/log/apache2/error_log, can see this:
+\# in /var/log/apache2/error_log, can see this:
 [Fri May 19 23:35:30.238174 2017] [mpm_prefork:notice] [pid 15315] AH00163: Apache/2.4.25 (Unix) PHP/5.6.30 mod_wsgi/4.5.15 Python/2.7 configured -- resuming normal operations
 
-# this shows the mod_wsgi is properly loaded.
+\# this shows the mod_wsgi is properly loaded.
 
 
 - Now configure site: 
@@ -489,19 +488,19 @@ Installing collected packages: Django
       Successfully uninstalled Django-1.7.6
 Successfully installed Django-1.11.1
 
-# With the pip installation above, run pip install again will 
-# remove old version, and install new version.
+\# With the pip installation above, run pip install again will 
+\# remove old version, and install new version.
 
-# Another way to install is:
-# $ git clone https://github.com/django/django.git
-# $ python setup.py install
-# Django installed this way is 'green', uninstalling is as simple as to
-# delete the django directory from Python's site-packages.
-# See: https://docs.djangoproject.com/en/1.11/topics/install/#installing-official-release
+\# Another way to install is:
+\# $ git clone https://github.com/django/django.git
+\# $ python setup.py install
+\# Django installed this way is 'green', uninstalling is as simple as to
+\# delete the django directory from Python's site-packages.
+\# See: https://docs.djangoproject.com/en/1.11/topics/install/#installing-official-release
 
-# Find directory of django:
+\# Find directory of django:
 $ python -c "import django; print(django.__path__)"
-# which shows:
+\# which shows:
 ['/Library/Python/2.7/site-packages/django']
 
 
