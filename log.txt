@@ -472,8 +472,12 @@ WSGIPythonPath /Library/WebServer/PythonRoot/python2/repo
 
 $ sudo pip install Django==1.11.1
 
-The directory '/Users/chenx/Library/Caches/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
-The directory '/Users/chenx/Library/Caches/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/Users/chenx/Library/Caches/pip/http' or its parent directory is not owned by the current user and the cache
+has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's
+-H flag.
+The directory '/Users/chenx/Library/Caches/pip' or its parent directory is not owned by the current user and caching wheels
+has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H
+flag.
 Collecting Django==1.11.1
   Downloading Django-1.11.1-py2.py3-none-any.whl (6.9MB)
     100% |....................| 7.0MB 141kB/s 
