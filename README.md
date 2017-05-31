@@ -1,7 +1,5 @@
 # Python_django_demo
-Another testing site with Django. 
-
-This project follows tutorial at <a href="https://docs.djangoproject.com/en/1.11/">django doc</a>.
+Another testing site with Django, following tutorial at <a href="https://docs.djangoproject.com/en/1.11/">django doc</a>.
 
 
 ## Links
