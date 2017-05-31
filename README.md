@@ -1,2 +1,560 @@
 # Python_django_demo
 Another testing site with Django
+
+
+## Links
+
+- djangoproject.com/
+- django doc, table of contents
+- Local Django testing site: localhost/python2/
+- Restart apache: sudo apachectl restart 
+
+
+05/30/2017
+
+- https://docs.djangoproject.com/en/1.11/intro/tutorial03/
+
+- To get from a URL to a view, Django uses what are known as ‘URLconfs’. 
+  A URLconf maps URL patterns to views.
+- https://stackoverflow.com/questions/19875789/django-gives-bad-request-400-when-debug-false
+
+
+05/24/2017
+
+- https://docs.djangoproject.com/en/1.11/intro/tutorial01/
+
+# show django version
+$ python -m django --version
+
+# create a project
+$ django-admin startproject mysite
+
+# start dev server: localhost:8000
+$ python manage.py runserver
+
+# create the Polls app
+$ python manage.py startapp polls
+
+# create polls/views.py 
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+
+# create polls/urls.py
+from django.conf.urls import url
+
+from . import views
+
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+]
+
+# edit mysite/urls.py
+from django.conf.urls import include, url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^polls/', include('polls.urls')),
+    url(r'^admin/', admin.site.urls),
+]
+
+# run server to see: localhost:8000/polls
+$ python manage.py runserver
+
+
+  - url() arguments:
+    - regex
+    - view
+    - kwargs
+    - name
+
+- https://docs.djangoproject.com/en/1.11/intro/tutorial02/
+
+  - create mysql database
+  
+$ cd /Library/WebServer/PythonRoot/python2
+$ cp /Library/WebServer/Documents/pibb/INSTALL/makedb.sql .
+# edit makedb.sql, use 'django_0001' as db name, 'django_usr1' as user name.
+
+$ mysql -u root -p
+mysql> source makedb.sql;
+Database changed
+ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
+ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
+ERROR 1017 (HY000): Can't find file: './mysql/proc.frm' (errno: 13)
+ERROR 1049 (42000): Unknown database 'django_0001'
+
+# look for solution for this issue:
+# https://stackoverflow.com/questions/12106727/mysql-copying-tables-files-gives-rise-to-error-1017-hy000-cant-find-file
+# 1. check permission: MySQL data directory and all files in it are owned by mysql user/group
+# chown -R mysql:mysql your-mysql-data-dir-here
+# 2. repair corrupted tables
+# Use mysqlcheck to check for corrupted tables and repair them if it finds any:
+# mysqlcheck -u root -p --auto-repair --all-databases
+# If you still can't use the tables after that then give mysqldump a go!
+
+$ which mysql
+/usr/local/mysql/bin/mysql
+$ ls -l /usr/local/
+$ sudo chown -R mysql:mysql /usr/local/mysql
+$ sudo chown -R mysql:mysql /usr/local/mysql-5.5.18-osx10.6-x86_64/
+
+mysql> source makedb.sql;
+Database changed
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+# this now works.
+$ mysql -u django_usr1 -p
+
+
+  - now create database
+
+$ python manage.py migrate
+...
+'Did you install mysqlclient or MySQL-python?' % e
+django.core.exceptions.ImproperlyConfigured: Error loading MySQLdb module: dlopen(/Library/Python/2.7/site-packages/_mysql.so, 2): Library not loaded: libmysqlclient.18.dylib
+  Referenced from: /Library/Python/2.7/site-packages/_mysql.so
+  Reason: unsafe use of relative rpath libmysqlclient.18.dylib in /Library/Python/2.7/site-packages/_mysql.so with restricted binary.
+Did you install mysqlclient or MySQL-python?
+
+# found solution:
+# https://stackoverflow.com/questions/31343299/mysql-improperly-configured-reason-unsafe-use-of-relative-path
+# Assuming that libmysqlclient.18.dylib is in /usr/local/mysql/lib/, then run the command:
+$ sudo install_name_tool -change libmysqlclient.18.dylib \
+  /usr/local/mysql/lib/libmysqlclient.18.dylib \
+  /Library/Python/2.7/site-packages/_mysql.so
+
+
+$ python manage.py check
+System check identified no issues (0 silenced).
+$ python manage.py migrate
+System check identified some issues:
+
+WARNINGS:
+?: (mysql.W002) MySQL Strict Mode is not set for database connection 'default'
+	HINT: MySQL's Strict Mode fixes many data integrity problems in MySQL, such as data truncation upon insertion, by escalating warnings into errors. It is strongly recommended you activate it. See: https://docs.djangoproject.com/en/1.11/ref/databases/#mysql-sql-mode
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying sessions.0001_initial... OK
+
+# Note: to fix the issue of MySQL Strict Mode, add this to mysite/settings.py:
+# (See: https://stackoverflow.com/questions/23022858/force-strict-sql-mode-in-django)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'sql_mode': 'traditional',
+#         }
+#     }
+# }
+#
+# This might work too:
+# 'OPTIONS': {
+#         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#  },
+#
+
+
+  Now these tables show in mysql:
+
+mysql> show tables;
++----------------------------+
+| Tables_in_django_0001      |
++----------------------------+
+| auth_group                 |
+| auth_group_permissions     |
+| auth_permission            |
+| auth_user                  |
+| auth_user_groups           |
+| auth_user_user_permissions |
+| django_admin_log           |
+| django_content_type        |
+| django_migrations          |
+| django_session             |
++----------------------------+
+10 rows in set (0.00 sec)
+
+
+  Next create models for the polls app:
+
+# polls/models.py
+from django.db import models
+
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+# this allowsdjango to 
+# 1) create a db schema,
+# 2) create a python db-access API for Question and Choice objects
+
+# mysite/settings.py
+INSTALLED_APPS = [
+...
+  'polls.apps.PollsConfig',  # in polls/apps.py
+]
+
+$ python manage.py makemigrations polls
+Migrations for 'polls':
+  polls/migrations/0001_initial.py
+    - Create model Choice
+    - Create model Question
+    - Add field question to choice
+
+# now migraton changes are stored in polls/migrations/0001_initial.py
+# sqlmigrate command will show the SQL:
+$ python manage.py sqlmigrate polls 0001
+
+# now apply the changes to db, without losing old data:
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Applying polls.0001_initial... OK
+
+
+  The 3-step guide to make model changes:
+  1) change modles (in polls/models.py)
+  2) run python manage.py makemigrations to create migrations for the changes
+  3) run python manage.py migrate to apply changes to the database
+
+  - Now try django shell:
+
+python manage.py shell
+
+
+  - Now create admin user for the Django Admin.
+
+$ python manage.py createsuperuser
+Username (leave blank to use 'chenx'): admin
+Email address: txchen@gmail.com
+Password: pwd1pwd!
+Password (again): pwd1pwd!
+
+# make the poll app modifiable in the admin
+# polls/admin.py
+rom django.contrib import admin
+
+from .models import Question
+from .models import Choice
+
+admin.site.register(Question)
+admin.site.register(Choice)
+
+# Now restart apache server
+# will be able to modify Question and Choice from admin UI.
+
+
+  - Now add a homepage to the entire site.
+
+# create mysite/views.py:
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.shortcuts import render
+
+# Create your views here.
+from django.http import HttpResponse
+
+def index(request):
+  return HttpResponse(
+    """Hello, world. You're at the python2 homepage.
+    <a href="admin/">Admin</a>
+    <a href="polls/">Polls</a>
+    """)
+
+# edit mysite/urls.py
+...
+from . import views
+
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+    ...
+]
+
+# restart apache. Now have a site homepage.
+
+
+
+05/19/2017
+
+- Install mod_wsgi 4.5.15
+  - download from https://pypi.python.org/pypi/mod_wsgi
+  - install instruction: 
+    https://modwsgi.readthedocs.io/en/develop/user-guides/installation-on-macosx.html
+
+$ ./configure
+checking for apxs2... no
+checking for apxs... /usr/sbin/apxs
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+cat: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/libtool: No such file or directory
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking for prctl... no
+checking Apache version... apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+2.4.25
+checking for python... /usr/bin/python
+apxs:Error: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/apr-1-config not found!.
+configure: creating ./config.status
+config.status: creating Makefile
+
+
+# See https://github.com/Homebrew/homebrew-php/issues/3594 for fix below:
+$ xcode-select --install
+$ sudo chown -R chenx /usr/local
+$ brew update
+To restore the stashed changes to /usr/local run:
+  'cd /usr/local && git stash pop'
+Updated Homebrew from 1244aa6ec to e1098b0e6.
+$ xcode-select --install
+$ sudo chown -R chenx /usr/local
+$ brew update
+To restore the stashed changes to /usr/local run:
+  'cd /usr/local && git stash pop'
+Updated Homebrew from 1244aa6ec to e1098b0e6.
+$$ xcode-select --install
+$ sudo chown -R chenx /usr/local
+$ brew update
+To restore the stashed changes to /usr/local run:
+  'cd /usr/local && git stash pop'
+Updated Homebrew from 1244aa6ec to e1098b0e6.
+...
+==> Migrating HOMEBREW_REPOSITORY (please wait)...
+==> Migrated HOMEBREW_REPOSITORY to /usr/local/Homebrew!
+Homebrew no longer needs to have ownership of /usr/local. If you wish you can
+return /usr/local to its default ownership with:
+  sudo chown root:wheel /usr/local
+$ sudo chown root:wheel /usr/local
+$ brew install apr-util
+$ brew link apr-util --force
+$ brew link apr --force
+$ which apu-1-config
+/usr/local/bin/apu-1-config
+$ sudo mkdir -p /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/
+$ sudo ln -s /usr/local/bin/apu-1-config /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/
+$ sudo ln -s /usr/local/bin/apr-1-config /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/bin/
+
+$ sudo mkdir -p /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/
+$ sudo ln -s /usr/bin/libtool /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.12.xctoolchain/usr/local/share/apr-1/build-1/
+
+$ ./configure
+checking for apxs2... no
+checking for apxs... /usr/sbin/apxs
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking for prctl... no
+checking Apache version... 2.4.25
+checking for python... /usr/bin/python
+configure: creating ./config.status
+config.status: creating Makefile
+
+$ make
+...
+apxs:Error: Command failed with rc=65536
+
+# search internet shows needs to reinstall python.
+# don't want the trouble. 
+
+
+# So use pip by following https://github.com/GrahamDumpleton/mod_wsgi
+# Note "pip list" shows all packages installed by pip.
+
+$ sudo pip install mod_wsgi
+Collecting mod_wsgi
+  Downloading mod_wsgi-4.5.15.tar.gz (1.8MB)
+    100% |████████████████████████████████| 1.9MB 558kB/s 
+Installing collected packages: mod-wsgi
+  Running setup.py install for mod-wsgi ... done
+Successfully installed mod-wsgi-4.5.15
+
+# target folder: 
+# /Library/Python/2.7/site-packages/mod_wsgi/mod_wsgi-py27.so
+
+# note now "mod_wsgi-express start-server" will not work. It times out.
+# follow https://github.com/GrahamDumpleton/mod_wsgi#connecting-into-apache-installation
+# to connect this into Apache installation:
+
+$ mod_wsgi-express module-config
+LoadModule wsgi_module "/Library/Python/2.7/site-packages/mod_wsgi/server/mod_wsgi-py27.so"
+WSGIPythonHome "/System/Library/Frameworks/Python.framework/Versions/2.7"
+
+# copy this into /etc/apache2/httpd.conf
+
+# restart apache
+$ sudo apachectl restart
+
+# in /var/log/apache2/error_log, can see this:
+[Fri May 19 23:35:30.238174 2017] [mpm_prefork:notice] [pid 15315] AH00163: Apache/2.4.25 (Unix) PHP/5.6.30 mod_wsgi/4.5.15 Python/2.7 configured -- resuming normal operations
+
+# this shows the mod_wsgi is properly loaded.
+
+
+- Now configure site: 
+  - follow https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/modwsgi/
+  - create /Library/WebServer/PythonRoot/python2/repo and enter this folder:
+
+$ django-admin startproject python2 /Library/WebServer/PythonRoot/python2/repo
+
+
+  - add these to /etc/apache2/httpd.conf:
+
+LoadModule wsgi_module "/Library/Python/2.7/site-packages/mod_wsgi/server/mod_wsgi-py27.so"
+WSGIPythonHome "/System/Library/Frameworks/Python.framework/Versions/2.7"
+WSGIScriptAlias /python2 /Library/WebServer/PythonRoot/python2/repo/python2/wsgi.py
+WSGIPythonPath /Library/WebServer/PythonRoot/python2/repo
+
+<Directory /Library/WebServer/PythonRoot/python2/repo/python2>
+  <Files wsgi.py>
+    Require all granted
+  </Files>
+</Directory>
+
+
+  - restart apache server: sudo apachectl restart
+  - now can visit http://localhost/python2
+    - also can visit http://localhost/python2/admin
+    - visit other urls will show 404 not found with /^admin/
+      - this is expected behavior: any undefined url is missing.
+      - can be disabled by setting DEBUG = False in setting file.
+      if comment out this in urls.py, it'll be good:
+      # url(r'^admin/', admin.site.urls),
+      but won't be able to visit /admin.
+    - well, seems the static/, media/ folders are all under /Library/WebServer/Document.
+      static files of admin/ server are also under static/.
+
+
+05/18/2017
+
+- Install django 1.11.1
+  - 2 ways to install: https://www.djangoproject.com/download/
+    1) pip install Django==1.11.1
+    2) git clone https://github.com/django/django.git
+       python setup.py install
+
+$ sudo pip install Django==1.11.1
+
+The directory '/Users/chenx/Library/Caches/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+The directory '/Users/chenx/Library/Caches/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Collecting Django==1.11.1
+  Downloading Django-1.11.1-py2.py3-none-any.whl (6.9MB)
+    100% |....................| 7.0MB 141kB/s 
+Requirement already satisfied: pytz in /Library/Python/2.7/site-packages (from Django==1.11.1)
+Installing collected packages: Django
+  Found existing installation: Django 1.7.6
+    Uninstalling Django-1.7.6:
+      Successfully uninstalled Django-1.7.6
+Successfully installed Django-1.11.1
+
+# With the pip installation above, run pip install again will 
+# remove old version, and install new version.
+
+# Another way to install is:
+# $ git clone https://github.com/django/django.git
+# $ python setup.py install
+# Django installed this way is 'green', uninstalling is as simple as to
+# delete the django directory from Python's site-packages.
+# See: https://docs.djangoproject.com/en/1.11/topics/install/#installing-official-release
+
+# Find directory of django:
+$ python -c "import django; print(django.__path__)"
+# which shows:
+['/Library/Python/2.7/site-packages/django']
+
+
+- Installed django 1.11.1 to: /Library/Python/2.7/site-packages/django
+- Verify:
+
+$ python
+>>> import django
+>>> print django.get_version()
+
+- Note:
+  when 'import django' got this error:
+    AttributeError: 'module' object has no attribute 'lru_cache' 
+  fixed by:
+    in /Library/Python/2.7/site-packages/django, 
+    move the 3 *.pyc file to to_delete/ folder, or just delete them.
+
+See: http://jujingge.com/article/245
+
+AttributeError: 'module' object has no attribute 'lru_cache'
+安装和导入Django报错：
+Traceback (most recent call last):
+  File "", line 1, in 
+  File "django/__init__.py", line 1, in 
+    from django.utils.version import get_version
+  File "django/utils/version.py", line 60, in 
+    @functools.lru_cache()
+AttributeError: 'module' object has no attribute 'lru_cache'
+ 
+解决方法：
+删除python目录下django根目录的三个编译的python字节码pyc文件
+cd /usr/lib/python2.7/site-packages/django
+
+rm __init__.pyc shortcuts.pyc __main__.pyc
+ 
+然后在python中import django就不会报错了
+ 
+参考来源：http://jingyan.baidu.com/article/fcb5aff74eb708edaa4a7119.html
+
+
+- Configure MySQL: Install mysqlclient for Django:
+  - current version is 1.3.10: https://pypi.python.org/pypi/mysqlclient
+$ sudo pip install mysqlclient
+Collecting mysqlclient
+  Downloading mysqlclient-1.3.10.tar.gz (82kB)
+    100% |████████████████████████████████| 92kB 1.5MB/s 
+Installing collected packages: mysqlclient
+  Running setup.py install for mysqlclient ... done
+Successfully installed mysqlclient-1.3.10
+
+
+- TODO
+  - configure Apache with mod_wsgi (http://modwsgi.readthedocs.io/en/develop/) (done)
+  - configure MySQL (done)
+  See: https://docs.djangoproject.com/en/1.11/topics/install
+       https://github.com/GrahamDumpleton/mod_wsgi
+  - get admin/ to work. (done)
+
