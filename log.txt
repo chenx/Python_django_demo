@@ -5,7 +5,7 @@ Django
  -  django doc, table of contents
  -  Local Django testing site: localhost/python2/
  -  Restart apache: sudo apachectl restart 
- - See log: tail -f /var/log/apache2/error_log
+ -  Check log: tail -f /var/log/apache2/error_log
  
 
 06/01/2017
