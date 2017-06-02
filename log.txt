@@ -7,6 +7,14 @@ Django
  -  Restart apache: sudo apachectl restart 
 
 
+06/01/2017
+
+- https://docs.djangoproject.com/en/1.11/intro/tutorial04/
+- generic view examle does not work:
+  - template_name does not hide default
+  - result page does not show
+  
+  
 05/30/2017
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial03/
