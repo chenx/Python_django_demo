@@ -8,6 +8,7 @@ Another testing site with Django, following tutorial at <a href="https://docs.dj
 - <a href="https://docs.djangoproject.com/en/1.11/">django doc</a>, <a href="https://docs.djangoproject.com/en/1.11/contents/">table of contents</a>
 - Local Django testing site: localhost/python2/
 - Restart apache: sudo apachectl restart 
+- See log: tail -f /var/log/apache2/error_log
 
 
 ## Environment
