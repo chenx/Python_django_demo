@@ -9,12 +9,15 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.db.models import F
 from django.views import generic
+from django.utils import timezone
 
 from .models import Question, Choice
 
 
 def index(request):
-  latest_question_list = Question.objects.order_by('-pub_date')[:5]
+  latest_question_list = Question.objects.filter(
+    pub_date__lte=timezone.now()
+  ).order_by('-pub_date')[:5]
   context = { 'latest_question_list': latest_question_list }
   return render(request, 'polls/index.html', context)
 
@@ -33,7 +36,11 @@ def index2(request):
   return HttpResponse(output)
 
 def detail(request, question_id):
-  question = get_object_or_404(Question, pk=question_id)
+  # question = get_object_or_404(Question, pk=question_id)
+  question = get_object_or_404(
+    Question.objects.filter(pub_date__lte=timezone.now()), 
+    pk=question_id
+  )
   return render(request, 'polls/detail.html', {'question': question})
 
 def detail2(request, question_id):
@@ -72,6 +79,7 @@ def vote(request, question_id):
     return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 
+
 """
 Code below are for generic view. But does not work.
  - template_name does not hide default.
@@ -83,7 +91,10 @@ class IndexView(generic.ListView):
 
   def get_queryset(self):
     """Return the last five published questions."""
-    return Question.objects.order_by('-pub_date')[:5]
+    # return Question.objects.order_by('-pub_date')[:5]
+    return Question.objects.filter(
+      pub_date__lte=timezone.now()
+    ).order_by('-pub_date')[:5]
 
 class DetailView(generic.DetailView):
   model = Question
