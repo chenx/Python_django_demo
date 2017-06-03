@@ -8,6 +8,46 @@ Django
  -  Check log: tail -f /var/log/apache2/error_log
  
 
+06/02/2017
+
+- https://docs.djangoproject.com/en/1.11/intro/tutorial05/
+  - error: Requested setting DEFAULT_INDEX_TABLESPACE, but settings are not configured.
+    fix: enter python shell by:  python manage.py shell
+- enter shell with current project's settings
+  $ python manage.py shell
+- polls/test.py
+
+import datetime
+from django.utils import timezone
+from django.test import TestCase
+
+class QuestionMethodTests(TestCase):
+  def test_Method1(self):
+    ..
+    self.assertIs(Method1(), False)
+
+
+>>> from django.test.utils import setup_test_environment
+>>> setup_test_environment()
+
+>>> from django.urls import reverse
+>>> from django.test import Client
+>>> # create an instance of the client for our use
+>>> client = Client()
+>>> response = client.get('/')
+>>> response.status_code
+>>> from django.urls import reverse
+>>> response = client.get(reverse('polls:index'))
+>>> response.status_code
+>>> response.content
+>>> response.context['latest_question_list']
+
+
+- testing
+  $ python manage.py test polls
+- https://docs.djangoproject.com/en/1.11/topics/testing/
+
+
 06/01/2017
 
 - https://docs.djangoproject.com/en/1.11/intro/tutorial04/
@@ -46,6 +86,12 @@ $ git add -u
  delete mode 100644 repo/python2/wsgi.pyc
 $ git commit -m "remove pyc files"
 $ git push -u origin master
+
+# further update
+$ git pull
+$ git add .
+$ git commit -m "update"
+$ git push
 
   
 05/30/2017
