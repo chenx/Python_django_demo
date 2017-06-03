@@ -5,7 +5,8 @@ Django
  -  django doc, table of contents
  -  Local Django testing site: localhost/python2/
  -  Restart apache: sudo apachectl restart 
-
+ -  Check log: tail -f /var/log/apache2/error_log
+ 
 
 06/01/2017
 
@@ -13,7 +14,39 @@ Django
 - generic view examle does not work:
   - template_name does not hide default
   - result page does not show
-  
+- upload to github:
+
+# check out github project
+$ cd ${HOME}
+$ git clone https://github.com/chenx/Python_django_demo.git
+
+# add new files
+$ cp -r ${WWW_ROOT}/PythonRoot/python2/repo .
+$ git add repo/
+$ git commit -m "first commit"
+$ git push -u origin master
+
+# show command history
+$ history | tail -50
+
+# remove pyc files
+$ rm repo/*/*.pyc
+$ git add -u
+[master c8b3aa0] remove pyc files
+ 10 files changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 repo/polls/__init__.pyc
+ delete mode 100644 repo/polls/admin.pyc
+ delete mode 100644 repo/polls/apps.pyc
+ delete mode 100644 repo/polls/models.pyc
+ delete mode 100644 repo/polls/urls.pyc
+ delete mode 100644 repo/polls/views.pyc
+ delete mode 100644 repo/python2/__init__.pyc
+ delete mode 100644 repo/python2/settings.pyc
+ delete mode 100644 repo/python2/urls.pyc
+ delete mode 100644 repo/python2/wsgi.pyc
+$ git commit -m "remove pyc files"
+$ git push -u origin master
+
   
 05/30/2017
 
