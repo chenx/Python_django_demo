@@ -6,6 +6,25 @@ Django
  -  Local Django testing site: localhost/python2/
  -  Restart apache: sudo apachectl restart 
  -  Check log: tail -f /var/log/apache2/error_log
+
+
+06/04/2017
+
+- https://docs.djangoproject.com/en/1.11/intro/tutorial07/
+- https://docs.djangoproject.com/en/1.11/intro/reusable-apps/
+- https://docs.djangoproject.com/en/1.11/intro/whatsnext/
+- https://docs.djangoproject.com/en/1.11/intro/contributing/
+- Next: https://docs.djangoproject.com/en/1.11/topics/
+
+
+06/03/2017
+
+- https://docs.djangoproject.com/en/1.11/intro/tutorial06/
+  - in my setting, python root is /python2, so /static is not under polls/
+  - put this in template/polls/index.html:
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
  
 
 06/02/2017
